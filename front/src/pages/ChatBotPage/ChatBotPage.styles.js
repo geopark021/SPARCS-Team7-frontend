@@ -31,7 +31,6 @@ export const ChatContainer = styled.div`
   flex-direction: column;
   margin-bottom: 1rem;
 
-  /* 스크롤바 스타일링 */
   &::-webkit-scrollbar {
     width: 12px;
   }

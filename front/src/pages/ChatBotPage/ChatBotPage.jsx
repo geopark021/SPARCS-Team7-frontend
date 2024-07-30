@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import {
   PageContainer,
@@ -15,32 +15,30 @@ import {
   InputContainer,
 } from "./ChatBotPage.styles";
 import chatBotIcon from "../../assets/icons/chat-bot-icon.png";
-import chatAiGenBtn from "../../assets/icons/chat-ai-img-gen-btn.png";
+import chatAiGenBtn from "../../assets/icons/chat-ai-img-gen-btn-active.png";
 
 const ChatBotPage = () => {
+  const location = useLocation();
   const navigate = useNavigate();
-  const [messages, setMessages] = useState([
-    {
-      type: "bot",
-      content: "글을 보니 다음과 같은 감정을 느끼신 것 같아요. 맞으신가요?",
-      options: ["기쁨", "분노", "슬픔", "두려움"],
-    },
-  ]);
-  const [userInput, setUserInput] = useState("");
+  const [options, setOptions] = useState([]);
+  const [selectedOption, setSelectedOption] = useState(null);
+
+  useEffect(() => {
+    if (location.state && location.state.choices) {
+      setOptions(location.state.choices);
+    }
+  }, [location.state]);
 
   const handleOptionClick = (option) => {
-    const newMessage = {
-      type: "user",
-      content: option,
-    };
-    setMessages((prevMessages) => [...prevMessages, newMessage]);
-
-    // 응답 봇 적는 곳
+    setSelectedOption(option);
   };
 
   const handleSubmit = () => {
-    // 제출 내용 적용
-    navigate("/imageresult");
+    if (selectedOption) {
+      navigate("/imageresult", { state: { selectedOption } });
+    } else {
+      alert("옵션을 선택해주세요.");
+    }
   };
 
   return (
@@ -48,32 +46,33 @@ const ChatBotPage = () => {
       <Navbar />
       <ChatContainer>
         <Header>이미지 생성하기</Header>
-        {messages.map((message, index) => (
+        <MessageContainer>
+          <ChatBotIcon src={chatBotIcon} alt="Chat Bot" />
+          <ChatBotMessage>
+            <Message>다음 중 어떤 장면을 이미지로 생성하시겠습니까?</Message>
+          </ChatBotMessage>
+        </MessageContainer>
+        {options.map((option, index) => (
           <MessageContainer key={index}>
-            {message.type === "bot" ? (
-              <>
-                <ChatBotIcon src={chatBotIcon} alt="Chat Bot" />
-                <ChatBotMessage>
-                  <Message>{message.content}</Message>
-                  {message.options &&
-                    message.options.map((option, idx) => (
-                      <Option
-                        key={idx}
-                        onClick={() => handleOptionClick(option)}
-                      >
-                        {option}
-                      </Option>
-                    ))}
-                </ChatBotMessage>
-              </>
-            ) : (
-              <UserMessage>{message.content}</UserMessage>
-            )}
+            <ChatBotIcon src={chatBotIcon} alt="Chat Bot" />
+            <ChatBotMessage>
+              <Option
+                onClick={() => handleOptionClick(option)}
+                isSelected={selectedOption === option}
+              >
+                {option}
+              </Option>
+            </ChatBotMessage>
           </MessageContainer>
         ))}
+        {selectedOption && (
+          <MessageContainer>
+            <UserMessage>{selectedOption}</UserMessage>
+          </MessageContainer>
+        )}
       </ChatContainer>
       <InputContainer>
-        <SubmitButton onClick={handleSubmit}>
+        <SubmitButton onClick={handleSubmit} disabled={!selectedOption}>
           <img src={chatAiGenBtn} alt="이미지 생성하기" />
         </SubmitButton>
       </InputContainer>

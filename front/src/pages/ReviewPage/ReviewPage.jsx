@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
+import { fetchClovaQuestions } from "../../utils/clovaApi";
 import {
   PageContainer,
   ReviewForm,
@@ -14,24 +15,26 @@ import {
   CharCount,
   ColorFieldSet,
 } from "./ReviewPage.styles";
-import bookIcon from "../../assets/icons/book-report-logo.png"; // 아이콘 이미지 경로 수정 필요
+import bookIcon from "../../assets/icons/book-report-logo.png";
 
 const ReviewPage = () => {
   const [selectedColor, setSelectedColor] = useState("");
   const [content, setContent] = useState("");
+  const [bookTitle, setBookTitle] = useState("");
+  const [workTitle, setWorkTitle] = useState("");
   const navigate = useNavigate();
 
   const handleColorButtonClick = (color) => {
     setSelectedColor(color);
   };
 
-  const handleSubmit = () => {
-    // 서버에 데이터를 전송하는 로직을 여기에 작성합니다.
-    console.log("Selected color:", selectedColor);
-    console.log("Review content:", content);
-
-    // 챗봇 대화 페이지로 이동
-    navigate("/chatbot");
+  const handleSubmit = async () => {
+    try {
+      const response = await fetchClovaQuestions(content);
+      navigate("/chatbot", { state: { choices: response.choices } });
+    } catch (error) {
+      console.error("Failed to fetch questions:", error);
+    }
   };
 
   return (
@@ -42,13 +45,15 @@ const ReviewPage = () => {
           <img
             src={bookIcon}
             alt="Book Icon"
-            style={{ margin: "0 auto", display: "block", marginBottom: "2rem" }} // marginBottom 속성 추가
+            style={{ margin: "0 auto", display: "block", marginBottom: "2rem" }}
           />
           <FieldSet>
             <FieldLabel>책 제목</FieldLabel>
             <input
               type="text"
               placeholder="책 제목"
+              value={bookTitle}
+              onChange={(e) => setBookTitle(e.target.value)}
               style={{
                 flex: 1,
                 padding: "0.5rem",
@@ -62,6 +67,8 @@ const ReviewPage = () => {
             <input
               type="text"
               placeholder="작품 제목"
+              value={workTitle}
+              onChange={(e) => setWorkTitle(e.target.value)}
               style={{
                 flex: 1,
                 padding: "0.5rem",
