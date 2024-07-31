@@ -3,12 +3,12 @@ import styled from "styled-components";
 export const PageContainer = styled.div`
   position: relative;
   width: 100%;
-  min-height: 100vh; /* 100vh에서 min-height로 변경 */
+  min-height: 100vh;
   display: flex;
   justify-content: center;
-  align-items: flex-start; /* 중앙 정렬에서 상단 정렬로 변경 */
+  align-items: flex-start;
   background-color: #eeeae2;
-  padding-top: 80px; /* Navbar 높이만큼 패딩 추가 */
+  padding-top: 80px;
 `;
 
 export const ReviewForm = styled.div`

@@ -38,7 +38,7 @@ const LoginPage = () => {
       <LoginContainer>
         <form autoComplete="off" onSubmit={handleSubmit}>
           <Title>Log In</Title>
-          <Input type="text" placeholder="Username, email & phone number" />
+          <Input type="text" placeholder="Email" />
           <PasswordInput
             type="password"
             name="password_custom"
@@ -50,11 +50,11 @@ const LoginPage = () => {
           />
           <LinkContainer>
             <Link href="#" onClick={handleCreateAccountClick}>
-              Create a New Account
+              새 계정 생성하기
             </Link>
-            <Link href="#">Forgot Password?</Link>
+            <Link href="#">비밀번호 찾기</Link>
           </LinkContainer>
-          <Button type="submit">Login</Button>
+          <Button type="submit">로그인</Button>
         </form>
       </LoginContainer>
     </PageContainer>

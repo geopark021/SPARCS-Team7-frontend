@@ -31,7 +31,7 @@ const ReviewPage = () => {
   const handleSubmit = async () => {
     try {
       const response = await fetchClovaQuestions(content);
-      navigate("/chatbot", { state: { choices: response.choices } });
+      navigate("/chatbot", { state: { choices: response.choices, content } });
     } catch (error) {
       console.error("Failed to fetch questions:", error);
     }

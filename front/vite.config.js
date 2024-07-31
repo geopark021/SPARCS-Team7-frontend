@@ -11,6 +11,13 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/api/, ""),
         secure: false,
       },
+      "/ncloud": {
+        // naver cloud bucket 접근
+        target: "https://kr.object.ncloudstorage.com",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/ncloud/, ""),
+        secure: false,
+      },
     },
   },
 });

@@ -65,7 +65,7 @@ export const Button = styled.button`
   border: none;
   border-radius: 0.25rem;
   font-size: 1rem;
-  font-family: "IM FELL Double Pica", serif;
+  font-family: "Nanumsquare";
   cursor: pointer;
   font-weight: bold;
   transition: background-color 0.3s;

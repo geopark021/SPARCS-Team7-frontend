@@ -1,42 +1,52 @@
+// src/pages/MainPage/MainPage.jsx
+
 import React, { useState, useEffect } from "react";
 import Navbar from "../../components/Navbar/Navbar";
 import LikePromotion from "../../components/LikePromotion/LikePromotion";
 import ImageGrid from "../../components/ImageGrid/ImageGrid";
 import PlusButton from "../../components/PlusButton/PlusButton";
-
-// 이미지 파일 경로 배열 - 랜덤 8개 선택
-const imagePaths = [
-  "/src/assets/images/report-most-liked_1.png",
-  "/src/assets/images/report-most-liked_2.png",
-  "/src/assets/images/report-most-liked_3.png",
-  "/src/assets/images/report-most-liked_4.png",
-  "/src/assets/images/report-most-liked_5.png",
-  "/src/assets/images/report-most-liked_6.png",
-  "/src/assets/images/report-most-liked_7.png",
-  "/src/assets/images/report-most-liked_8.png",
-];
+import { fetchImages } from "../../utils/api";
 
 // 랜덤으로 이미지를 선택하는 함수
-const getRandomImages = (num) => {
-  const shuffled = [...imagePaths].sort(() => 0.5 - Math.random());
+const getRandomImages = (images, num) => {
+  const shuffled = [...images].sort(() => 0.5 - Math.random());
   return shuffled.slice(0, num);
 };
 
 const MainPage = () => {
-  const [images, setImages] = useState(getRandomImages(4)); // 초기 4개 랜덤 이미지
-  const [loading, setLoading] = useState(false);
+  const [images, setImages] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const promotionImages = getRandomImages(3); // LikePromotion용 랜덤 3개 이미지
+  useEffect(() => {
+    const loadImages = async () => {
+      try {
+        const fetchedImages = await fetchImages();
+        setImages(getRandomImages(fetchedImages, 4)); // 초기 4개 랜덤 이미지
+        setLoading(false);
+      } catch (error) {
+        console.error("Failed to load images", error);
+        setLoading(false);
+      }
+    };
 
-  const fetchMoreImages = () => {
+    loadImages();
+  }, []);
+
+  const fetchMoreImages = async () => {
     if (loading) return;
     setLoading(true);
 
-    setTimeout(() => {
-      const newImages = getRandomImages(8);
-      setImages((prevImages) => [...prevImages, ...newImages]);
+    try {
+      const fetchedImages = await fetchImages();
+      setImages((prevImages) => [
+        ...prevImages,
+        ...getRandomImages(fetchedImages, 4),
+      ]);
       setLoading(false);
-    }, 1000); // 이미지 로딩 딜레이 설정함
+    } catch (error) {
+      console.error("Failed to load more images", error);
+      setLoading(false);
+    }
   };
 
   const handleScroll = () => {
@@ -62,7 +72,7 @@ const MainPage = () => {
     >
       <Navbar />
       <main className="flex-1 mt-16 px-4 max-w-6xl mx-auto w-full">
-        <LikePromotion images={promotionImages} />
+        <LikePromotion images={images.slice(0, 3)} />
         <ImageGrid images={images} />
         {loading && (
           <div className="flex justify-center items-center py-4">

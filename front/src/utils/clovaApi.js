@@ -20,7 +20,7 @@ export const fetchClovaQuestions = async (content) => {
             {
               role: "system",
               content:
-                "응답 시 다음 지침을 엄격히 준수하세요:\r\n- 3가지 주요 사건/상황은 각각 1문장으로 작성하여 [main_1], [main_2], [main_3] 아랫줄에 작성하세요.\r\n- 모든 대괄호([])를 포함하여 그대로 출력하세요. 대괄호를 제거하지 마세요.\r\n- 항상 아래의 형식을 정확히 따라 출력하세요:\r\n주의사항:\r\n- 요약과 주요 사건/상황 설명은 간결하고 명확해야 합니다.\r\n- 책의 핵심 주제나 메시지를 포함하도록 노력하세요.\r\n- 사용자가 제공한 독후감의 내용에만 기반하여 응답하세요.\r\n- 추가적인 설명이나 개인적인 의견을 포함하지 마세요.\r\n- 위에서 지정한 형식 외의 다른 텍스트나 설명을 추가하지 마세요.\r\n- 대괄호([])를 포함한 모든 지정된 형식을 그대로 유지하세요.",
+                "다음 <안내상황>을 순서대로 이행하세요\r\n<안내상황>\r\n1.입력받은  내용에서 나타난 감상들이나 사건들을 3가지를 생각을 하세요\r\n2. 생각한 사건과 상황 3가지를 각각 한문장으로 요약하세요\r\n3. 요약한 문장을 <example> 에 맞게 무조건 한번만 출력해주세요\r\n</안내상황>\r\n\r\n<example>\r\n[main_1] 등장인물이 춤추는 장면\r\n[main_2] 죽음이 다가오는 상황\r\n[main_3] 어떤 상황\r\n</example>",
             },
             {
               role: "user",
@@ -48,7 +48,6 @@ export const fetchClovaQuestions = async (content) => {
       .filter((event) => event);
     console.log("All events:", events);
 
-    // 마지막에서 두 번째 이벤트 추출
     const secondLastEvent = events[events.length - 2];
     console.log("Second last event:", secondLastEvent);
 
@@ -62,7 +61,6 @@ export const fetchClovaQuestions = async (content) => {
       const fullMessage = data.message.content;
       console.log("Full message content:", fullMessage);
 
-      // 선택지 추출
       const main1Index = fullMessage.indexOf("[main_1]");
       const main2Index = fullMessage.indexOf("[main_2]");
       const main3Index = fullMessage.indexOf("[main_3]");
