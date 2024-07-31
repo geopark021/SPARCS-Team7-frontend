@@ -1,69 +1,52 @@
-// src/pages/MainPage/MainPage.jsx
-
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Navbar from "../../components/Navbar/Navbar";
 import LikePromotion from "../../components/LikePromotion/LikePromotion";
 import ImageGrid from "../../components/ImageGrid/ImageGrid";
 import PlusButton from "../../components/PlusButton/PlusButton";
 import { fetchImages } from "../../utils/api";
 
-// 랜덤으로 이미지를 선택하는 함수
-const getRandomImages = (images, num) => {
-  const shuffled = [...images].sort(() => 0.5 - Math.random());
-  return shuffled.slice(0, num);
-};
-
 const MainPage = () => {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(0);
 
-  useEffect(() => {
-    const loadImages = async () => {
-      try {
-        const fetchedImages = await fetchImages();
-        setImages(getRandomImages(fetchedImages, 4)); // 초기 4개 랜덤 이미지
-        setLoading(false);
-      } catch (error) {
-        console.error("Failed to load images", error);
-        setLoading(false);
-      }
-    };
-
-    loadImages();
-  }, []);
-
-  const fetchMoreImages = async () => {
-    if (loading) return;
-    setLoading(true);
-
+  const loadImages = useCallback(async (pageNum) => {
     try {
-      const fetchedImages = await fetchImages();
-      setImages((prevImages) => [
-        ...prevImages,
-        ...getRandomImages(fetchedImages, 4),
-      ]);
+      const fetchedImages = await fetchImages(8); // 8개씩 이미지 가져오기
+      setImages((prevImages) => [...prevImages, ...fetchedImages]);
       setLoading(false);
     } catch (error) {
-      console.error("Failed to load more images", error);
+      console.error("Failed to load images", error);
       setLoading(false);
     }
-  };
+  }, []);
 
-  const handleScroll = () => {
+  useEffect(() => {
+    loadImages(0); // 초기 이미지 로딩
+  }, [loadImages]);
+
+  const fetchMoreImages = useCallback(() => {
+    if (loading) return;
+    setLoading(true);
+    setPage((prevPage) => prevPage + 1);
+    loadImages(page + 1);
+  }, [loading, page, loadImages]);
+
+  const handleScroll = useCallback(() => {
     if (
-      window.innerHeight + window.scrollY >=
-      document.body.offsetHeight - 200
+      window.innerHeight + document.documentElement.scrollTop >=
+      document.documentElement.offsetHeight - 200
     ) {
       fetchMoreImages();
     }
-  };
+  }, [fetchMoreImages]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [handleScroll]);
 
   return (
     <div
