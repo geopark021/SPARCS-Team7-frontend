@@ -40,18 +40,34 @@ export const Popup = styled.div`
   width: 80%;
   height: calc(80% - 70px);
   background: white;
-  padding: 0;
+  padding: 2rem;
   border-radius: 1rem;
   z-index: 1000;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  overflow-y: auto;
+`;
 
-  img {
-    width: 100%;
-    height: 100%;
-    border-radius: 1rem;
-    object-fit: cover;
-  }
+export const PopupContent = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  overflow-y: auto;
+`;
+
+export const PopupTitle = styled.h2`
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+`;
+
+export const PopupText = styled.p`
+  font-size: 1rem;
+  line-height: 1.5;
 `;
