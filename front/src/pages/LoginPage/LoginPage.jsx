@@ -1,6 +1,9 @@
+// src/pages/LoginPage/LoginPage.jsx
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
+import { loginUser } from "../../utils/api";
 import {
   PageContainer,
   BackgroundContainer,
@@ -8,7 +11,6 @@ import {
   LoginContainer,
   Title,
   Input,
-  PasswordInput,
   Button,
   LinkContainer,
   Link,
@@ -17,16 +19,32 @@ import backgroundImg from "../../assets/images/login-page-background.png";
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
 
   const handleCreateAccountClick = () => {
     navigate("/signup");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // 로그인 로직 추가해야함
-    console.log("Login submitted");
+    try {
+      const loginData = { email, password };
+      console.log("[JSON화된 내용]:", JSON.stringify(loginData));
+      const response = await loginUser(loginData);
+      console.log("[응답 데이터]:", JSON.stringify(response));
+      if (response.code === "SU") {
+        localStorage.setItem("userEmail", email); // 로그인 성공 시 이메일 저장
+        navigate("/main");
+      } else {
+        console.error("Login failed:", response.message);
+        setError(response.message);
+      }
+    } catch (error) {
+      console.error("Error logging in user:", error);
+      setError("Login failed. Please try again.");
+    }
   };
 
   return (
@@ -38,14 +56,19 @@ const LoginPage = () => {
       <LoginContainer>
         <form autoComplete="off" onSubmit={handleSubmit}>
           <Title>Log In</Title>
-          <Input type="text" placeholder="Email" />
-          <PasswordInput
+          <Input
+            type="text"
+            name="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <Input
             type="password"
-            name="password_custom"
+            name="password"
             placeholder="Password"
-            autoComplete="new-password"
-            data-form-type="password"
             value={password}
+            style={{ color: "black" }}
             onChange={(e) => setPassword(e.target.value)}
           />
           <LinkContainer>
@@ -56,6 +79,7 @@ const LoginPage = () => {
           </LinkContainer>
           <Button type="submit">로그인</Button>
         </form>
+        {error && <p style={{ color: "red" }}>{error}</p>}
       </LoginContainer>
     </PageContainer>
   );

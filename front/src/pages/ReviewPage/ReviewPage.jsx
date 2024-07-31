@@ -24,14 +24,27 @@ const ReviewPage = () => {
   const [workTitle, setWorkTitle] = useState("");
   const navigate = useNavigate();
 
+  const colorMapping = {
+    "#FF6B6B": "빨강",
+    "#6BCB77": "초록",
+    "#4D96FF": "파랑",
+  };
+
   const handleColorButtonClick = (color) => {
-    setSelectedColor(color);
+    setSelectedColor(colorMapping[color]);
   };
 
   const handleSubmit = async () => {
     try {
       const response = await fetchClovaQuestions(content);
-      navigate("/chatbot", { state: { choices: response.choices, content } });
+      navigate("/chatbot", {
+        state: {
+          choices: response.choices,
+          content,
+          bookTitle,
+          color: selectedColor,
+        },
+      });
     } catch (error) {
       console.error("Failed to fetch questions:", error);
     }
@@ -96,17 +109,17 @@ const ReviewPage = () => {
               <ColorButton
                 style={{ backgroundColor: "#FF6B6B" }}
                 onClick={() => handleColorButtonClick("#FF6B6B")}
-                isSelected={selectedColor === "#FF6B6B"}
+                isSelected={selectedColor === "빨강"}
               ></ColorButton>
               <ColorButton
                 style={{ backgroundColor: "#6BCB77" }}
                 onClick={() => handleColorButtonClick("#6BCB77")}
-                isSelected={selectedColor === "#6BCB77"}
+                isSelected={selectedColor === "초록"}
               ></ColorButton>
               <ColorButton
                 style={{ backgroundColor: "#4D96FF" }}
                 onClick={() => handleColorButtonClick("#4D96FF")}
-                isSelected={selectedColor === "#4D96FF"}
+                isSelected={selectedColor === "파랑"}
               ></ColorButton>
             </ColorButtonContainer>
           </ColorFieldSet>

@@ -5,6 +5,7 @@ import {
   Routes,
   Navigate,
 } from "react-router-dom";
+import InitialPage from "./pages/InitialPage/InitialPage";
 import MainPage from "./pages/MainPage/MainPage";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import SignupPage from "./pages/SignupPage/SignupPage";
@@ -18,6 +19,7 @@ function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/" element={<InitialPage />} />
         <Route path="/main" element={<MainPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
@@ -26,7 +28,7 @@ function App() {
         <Route path="/chatbot" element={<ChatBotPage />} />
         <Route path="/imageresult" element={<ImageResultPage />} />
         <Route path="/mypage" element={<MyPage />} />
-        <Route path="*" element={<Navigate to="/login" />} />
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>
   );

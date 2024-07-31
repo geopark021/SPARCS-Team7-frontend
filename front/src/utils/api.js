@@ -3,6 +3,39 @@
 const baseURL = import.meta.env.VITE_API_URL;
 const bucketName = import.meta.env.VITE_NCP_BUCKET_NAME;
 
+// 로그인 API 호출 함수
+export const loginUser = async (loginData) => {
+  try {
+    console.log("Sending login request with data:", JSON.stringify(loginData));
+
+    const response = await fetch(`${baseURL}/books/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(loginData),
+      credentials: "include",
+    });
+
+    console.log("Response status:", response.status);
+    console.log("Response headers:", response.headers);
+
+    const responseText = await response.text();
+    console.log("Response body:", responseText);
+
+    if (!response.ok) {
+      throw new Error(
+        `Network response was not ok: ${response.status} ${response.statusText}`
+      );
+    }
+
+    return JSON.parse(responseText);
+  } catch (error) {
+    console.error("Error logging in user:", error);
+    throw error;
+  }
+};
+
 // 회원 가입 API 호출 함수
 export const registerUser = async (userData) => {
   try {
@@ -25,7 +58,7 @@ export const registerUser = async (userData) => {
   }
 };
 
-// 이메일 중복 검사 API 호출 함수 - json 아님 requestParams 이용
+// 이메일 중복 검사 API 호출 함수
 export const checkEmailDuplicate = async (email) => {
   try {
     const data = new URLSearchParams();
@@ -69,6 +102,43 @@ export const fetchImages = async () => {
     return imageUrls;
   } catch (error) {
     console.error("Error fetching images:", error);
+    throw error;
+  }
+};
+
+// 본인 독후감 불러오기 API 호출 함수
+export const fetchUserBooks = async (email) => {
+  try {
+    const response = await fetch(
+      `${baseURL}/books/my?email=${encodeURIComponent(email)}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      }
+    );
+
+    const responseText = await response.text();
+    console.log("Response body:", responseText);
+
+    if (!response.ok) {
+      throw new Error(
+        `Network response was not ok: ${response.status} ${response.statusText}`
+      );
+    }
+
+    const data = JSON.parse(responseText);
+
+    // rp_id가 "Empty"인 경우 처리
+    if (data.rp_id === "Empty") {
+      return [];
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Error fetching user books:", error);
     throw error;
   }
 };

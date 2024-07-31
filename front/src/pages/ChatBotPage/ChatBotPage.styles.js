@@ -96,11 +96,21 @@ export const Option = styled.button`
   margin-top: 0.5rem;
   cursor: pointer;
   display: block;
+  width: 100%;
+  text-align: left;
+  font-family: "NanumSquare";
   color: #333;
 
   &:hover {
     background-color: #ffc107;
   }
+
+  ${(props) =>
+    props.isSelected &&
+    `
+    background-color: #ffc107;
+    font-weight: bold;
+  `}
 `;
 
 export const InputContainer = styled.div`
@@ -122,5 +132,29 @@ export const SubmitButton = styled.button`
     &:hover {
       transform: scale(1.1);
     }
+  }
+`;
+
+export const ImageOptionContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 0.5rem;
+`;
+
+export const ImageOption = styled.img`
+  width: 100%;
+  max-width: 200px;
+  height: auto;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  border-radius: 0.25rem;
+  border: ${(props) =>
+    props.isSelected ? "2px solid #ffc107" : "2px solid transparent"};
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: scale(1.05);
+    border-color: #ffc107;
   }
 `;

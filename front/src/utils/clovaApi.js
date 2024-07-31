@@ -20,7 +20,7 @@ export const fetchClovaQuestions = async (content) => {
             {
               role: "system",
               content:
-                "다음 <안내상황>을 순서대로 이행하세요\r\n<안내상황>\r\n1.입력받은  내용에서 나타난 감상들이나 사건들을 3가지를 생각을 하세요\r\n2. 생각한 사건과 상황 3가지를 각각 한문장으로 요약하세요\r\n3. 요약한 문장을 <example> 에 맞게 무조건 한번만 출력해주세요\r\n</안내상황>\r\n\r\n<example>\r\n[main_1] 등장인물이 춤추는 장면\r\n[main_2] 죽음이 다가오는 상황\r\n[main_3] 어떤 상황\r\n</example>",
+                "다음 <안내상황>을 순서대로 이행하세요\n<안내상황>\n1.입력받은  내용에서 나타난 감상들이나 사건들을 보고 생각난 감정 3가지를 생각하세요\n2. 생각한 감정 3가지를 각각 무조건 한 단어으로 요약하세요\n3. 요약한 문장을 <example> 에 맞게 무조건 한번만 출력해주세요\n</안내상황>\n\n<example>\n[main_1] 충격\n[main_2] 죽음\n[main_3] 안타까움\n</example>\n\n\n",
             },
             {
               role: "user",
