@@ -1,7 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Nav, LogoContainer, Logo, UserSection, Button } from "./Navbar.styles";
-//import logo from "../../assets/icons/book-report-logo.png"; // 검은색 원본
 import logo from "../../assets/icons/book-report-logo2.png"; // 빨간색
 import { fetchUserBooks } from "../../utils/api"; // API 호출 함수 임포트
 
@@ -15,6 +14,12 @@ const Navbar = () => {
 
   const handleLoginClick = () => {
     navigate("/login");
+  };
+
+  const handleLogoutClick = () => {
+    localStorage.removeItem("userEmail");
+    // 필요한 경우 다른 localStorage 항목들도 여기서 제거
+    navigate("/main"); // 로그아웃 후 메인 페이지로 이동
   };
 
   const handleMyPageClick = async () => {
@@ -39,9 +44,9 @@ const Navbar = () => {
         <Logo src={logo} alt="Book Report Logo" />
       </LogoContainer>
       <UserSection>
-        <Button onClick={handleLoginClick}>Login</Button>
         {email ? (
           <>
+            <Button onClick={handleLogoutClick}>Logout</Button>
             <Button onClick={handleMyPageClick}>MyPage</Button>
           </>
         ) : (
